@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
+
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
@@ -17,13 +20,19 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductCategory;
 
 @Configuration
-public class configRepo implements RepositoryRestConfigurer {
+public class configRepo  implements RepositoryRestConfigurer,WebMvcConfigurer {
     
     private EntityManager entityManager;
 
+    
     @Autowired
     public configRepo(EntityManager theEntityManager) {
         entityManager = theEntityManager;
+    }
+    //  method to allow cross origin response  for all origins
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("http//localhost:4200/**").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
     }
 
     @Override
@@ -58,5 +67,7 @@ public class configRepo implements RepositoryRestConfigurer {
         config.exposeIdsFor(DomainType);
 
     }
+
+   
 
 }
